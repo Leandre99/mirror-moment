@@ -23,20 +23,21 @@ function rulesChat(question: string, scan: SkinScan, history: SkinScan[]) {
   if (ingredients.length && !q.includes(",")) {
     trace.push("get_scan", "check_product");
     const r = checkProduct(question, scan);
-    const ok = r.verdict !== "skip";
-    return { answer: `${ok ? "Yes" : "Not right now"}: ${r.summary}${ok ? " Start slowly: 2 to 3 nights a week, and patch test first." : " Rescan in 1 to 2 weeks and ask me again."}`, trace };
+    const lead = r.verdict === "skip" ? "Not right now" : r.cautions.length ? "Carefully" : "Yes";
+    const tail = r.verdict === "skip" ? " Rescan in 1 to 2 weeks and ask me again." : r.cautions.length ? " If you try it, use it 2 nights a week over moisturizer and stop if you sting." : " Start slowly and patch test first.";
+    return { answer: `${lead}. ${r.summary}${tail}`, trace };
   }
-  if (q.includes(",") || /(buy|should i|ingredient|contains|use this)/.test(q)) {
-    trace.push("check_product");
-    const r = checkProduct(question, scan);
-    return { answer: `${r.title}. ${r.summary}`, trace };
-  }
-  const concern = (Object.keys(CONCERNS) as ConcernKey[]).find((k) => q.includes(k.replace("_", " ")) || q.includes(CONCERNS[k].label.toLowerCase()) || q.includes(CONCERNS[k].short.toLowerCase()));
+  const concern = q.includes(",") ? undefined : (Object.keys(CONCERNS) as ConcernKey[]).find((k) => q.includes(k.replace("_", " ")) || q.includes(CONCERNS[k].label.toLowerCase()) || q.includes(CONCERNS[k].short.toLowerCase()));
   if (concern) {
     trace.push("get_scan", "search_catalog");
     const c = scan.concerns.find((x) => x.key === concern);
     const picks = searchCatalog(concern, undefined, scan.skinType).slice(0, 2);
     return { answer: `${CONCERNS[concern].label}: you scored ${c?.ui ?? "n/a"}/100. ${CONCERNS[concern].explain} For your ${scan.skinType.toLowerCase()} skin, try: ${picks.map((p) => `${p.name} (${p.blurb})`).join(" or ")}.`, trace };
+  }
+  if (q.includes(",") || /(buy|should i|ingredient|contains|use this)/.test(q)) {
+    trace.push("check_product");
+    const r = checkProduct(question, scan);
+    return { answer: `${r.title}. ${r.summary}`, trace };
   }
   const plan = buildPlan(scan, history);
   trace.push("get_scan");

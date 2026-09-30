@@ -1,14 +1,15 @@
 "use client";
 import type { Plan, RoutineStep } from "@/lib/agent";
+import { MoonIcon, SunIcon } from "./icons";
 import { Card, Pill } from "./ui";
 
 const STEP_LABEL: Record<string, string> = { cleanser: "Cleanse", serum: "Serum", treatment: "Treat", moisturizer: "Moisturize", spf: "Protect", spot: "Spot" };
 
-function Routine({ title, steps, icon }: { title: string; steps: RoutineStep[]; icon: string }) {
+function Routine({ title, steps, icon }: { title: string; steps: RoutineStep[]; icon: React.ReactNode }) {
   return (
     <Card>
       <h3 className="mb-3 flex items-center gap-2 font-semibold text-stone-900">
-        <span>{icon}</span>
+        <span className="text-rose-600">{icon}</span>
         {title}
       </h3>
       <ol className="space-y-3">
@@ -74,8 +75,8 @@ export function PlanView({ plan }: { plan: Plan }) {
       )}
 
       <div className="grid gap-5 md:grid-cols-2">
-        <Routine title="Morning" icon={"\u2600\uFE0F"} steps={plan.routine.AM} />
-        <Routine title="Night" icon={"\u{1F319}"} steps={plan.routine.PM} />
+        <Routine title="Morning" icon={<SunIcon />} steps={plan.routine.AM} />
+        <Routine title="Night" icon={<MoonIcon />} steps={plan.routine.PM} />
       </div>
       <p className="text-xs text-stone-500">
         Full routine: {ids.size} products, ${total}. Brands are fictional demo items. Plug in any retailer catalog.

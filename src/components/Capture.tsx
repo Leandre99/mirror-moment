@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { MirrorIcon } from "./icons";
 import { Button } from "./ui";
 
 export function Capture({ onImage }: { onImage: (src: string) => void }) {
@@ -57,7 +58,7 @@ export function Capture({ onImage }: { onImage: (src: string) => void }) {
           </>
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-center text-stone-500">
-            <div className="text-5xl">{"\u{1FA9E}"}</div>
+            <MirrorIcon className="h-12 w-12 text-stone-400" />
             <p className="text-sm">Bare face, even light, look straight ahead.<br />Pull hair back from your forehead.</p>
           </div>
         )}
