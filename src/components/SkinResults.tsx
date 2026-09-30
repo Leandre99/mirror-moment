@@ -3,12 +3,12 @@ import { useState } from "react";
 import { CONCERNS, scoreBand, type ConcernKey, type SkinScan } from "@/lib/concerns";
 import { Card, Pill, ScoreRing } from "./ui";
 
-const BAR = { good: "#059669", ok: "#d97706", focus: "#e11d48" };
+const BAR = { good: "#059669", ok: "#d97706", focus: "#B9614A" };
 
 export function SkinResults({ scan, image, focus }: { scan: SkinScan; image: string; focus: ConcernKey[] }) {
   const withMask = scan.concerns.filter((c) => c.maskUrl);
   const [active, setActive] = useState<ConcernKey | null>(withMask.find((c) => focus.includes(c.key))?.key ?? withMask[0]?.key ?? null);
-  const [opacity, setOpacity] = useState(0.85);
+  const [opacity, setOpacity] = useState(0.55);
   const activeC = scan.concerns.find((c) => c.key === active);
 
   return (
@@ -33,7 +33,7 @@ export function SkinResults({ scan, image, focus }: { scan: SkinScan; image: str
             </div>
             <label className="flex items-center gap-2 text-xs text-stone-500">
               Map opacity
-              <input type="range" min={0} max={1} step={0.05} value={opacity} onChange={(e) => setOpacity(+e.target.value)} className="flex-1 accent-rose-600" />
+              <input type="range" min={0} max={1} step={0.05} value={opacity} onChange={(e) => setOpacity(+e.target.value)} className="flex-1 accent-clay-600" />
             </label>
           </div>
         ) : (
@@ -51,7 +51,7 @@ export function SkinResults({ scan, image, focus }: { scan: SkinScan; image: str
               <Pill>{scan.quality} analysis</Pill>
               {scan.mode === "mock" && <Pill tone="ok">Demo data</Pill>}
             </div>
-            <p className="max-w-md text-sm text-stone-600">Scores run from 1 to 100, and higher means healthier skin. Pink cards are what your plan focuses on.</p>
+            <p className="max-w-md text-sm text-stone-600">Scores run from 1 to 100, and higher means healthier skin. Highlighted cards are what your plan focuses on.</p>
           </div>
         </Card>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
@@ -59,7 +59,7 @@ export function SkinResults({ scan, image, focus }: { scan: SkinScan; image: str
             const band = scoreBand(c.ui);
             const isFocus = focus.includes(c.key);
             return (
-              <button key={c.key} onClick={() => c.maskUrl && setActive(c.key)} className={`rounded-2xl border p-3 text-left transition ${isFocus ? "border-rose-200 bg-rose-50/70" : "border-stone-200 bg-white/80"} ${active === c.key ? "ring-2 ring-stone-900" : ""}`}>
+              <button key={c.key} onClick={() => c.maskUrl && setActive(c.key)} className={`rounded-2xl border p-3 text-left transition ${isFocus ? "border-clay-200 bg-clay-50/70" : "border-stone-200 bg-white/80"} ${active === c.key ? "ring-2 ring-stone-900" : ""}`}>
                 <div className="flex items-center justify-between gap-1">
                   <span className="text-sm font-medium text-stone-800">{CONCERNS[c.key].label}</span>
                   <Pill tone={band.tone}>{band.label}</Pill>

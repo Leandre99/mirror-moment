@@ -9,7 +9,7 @@ export function ProgressView({ history, focus, onClear }: { history: SkinScan[];
   const H = 180;
   const x = (i: number) => (sorted.length === 1 ? W / 2 : 30 + (i * (W - 60)) / (sorted.length - 1));
   const y = (v: number) => H - 20 - ((v - 30) / 70) * (H - 40);
-  const colors = ["#e11d48", "#d97706", "#0891b2", "#7c3aed"];
+  const colors = ["#B9614A", "#d97706", "#0891b2", "#7c3aed"];
 
   return (
     <div className="space-y-5">
@@ -17,7 +17,7 @@ export function ProgressView({ history, focus, onClear }: { history: SkinScan[];
         <div className="flex items-center justify-between">
           <h3 className="font-semibold text-stone-900">Your skin over time</h3>
           {history.length > 0 && (
-            <button onClick={onClear} className="text-xs text-stone-400 hover:text-rose-600">
+            <button onClick={onClear} className="text-xs text-stone-400 hover:text-clay-600">
               Clear history
             </button>
           )}

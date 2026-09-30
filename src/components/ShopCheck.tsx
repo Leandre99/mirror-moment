@@ -38,7 +38,7 @@ export function ShopCheck({ scan, plan }: { scan: SkinScan; plan: Plan }) {
       <Card>
         <h3 className="font-semibold text-stone-900">Should I buy this?</h3>
         <p className="mt-1 text-sm text-stone-500">Paste an ingredient list or a product name. I&apos;ll check it against today&apos;s scan.</p>
-        <textarea value={input} onChange={(e) => setInput(e.target.value)} rows={4} placeholder="e.g. Aqua, Niacinamide, Salicylic Acid, Fragrance..." className="mt-3 w-full rounded-2xl border border-stone-200 bg-white p-3 text-sm outline-none focus:border-rose-300" />
+        <textarea value={input} onChange={(e) => setInput(e.target.value)} rows={4} placeholder="e.g. Aqua, Niacinamide, Salicylic Acid, Fragrance..." className="mt-3 w-full rounded-2xl border border-stone-200 bg-white p-3 text-sm outline-none focus:border-clay-300" />
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <Button onClick={() => run()} disabled={loading || !input.trim()}>
             {loading ? <Spinner /> : null} Check it
@@ -49,7 +49,7 @@ export function ShopCheck({ scan, plan }: { scan: SkinScan; plan: Plan }) {
             </button>
           ))}
         </div>
-        {err && <p className="mt-3 text-sm text-rose-600">{err}</p>}
+        {err && <p className="mt-3 text-sm text-clay-600">{err}</p>}
         {result && (
           <div className="mt-4 rounded-2xl border border-stone-200 bg-stone-50 p-4">
             <div className="flex items-center gap-2">
@@ -67,7 +67,7 @@ export function ShopCheck({ scan, plan }: { scan: SkinScan; plan: Plan }) {
               </div>
             )}
             {result.cautions.length > 0 && (
-              <div className="mt-2 text-xs text-rose-700">
+              <div className="mt-2 text-xs text-clay-700">
                 {result.cautions.map((c, i) => (
                   <div key={i}>
                     ! {c.ingredient}: {c.why}

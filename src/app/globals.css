@@ -2,15 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-image: radial-gradient(circle at 10% 0%, #fde7ea 0, transparent 40%), radial-gradient(circle at 90% 10%, #f5efe6 0, transparent 35%);
-  background-attachment: fixed;
+html {
+  scroll-behavior: smooth;
+}
+
+h1,
+h2 {
+  font-family: var(--font-display), ui-serif, Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+.bg-grain {
+  background-image: radial-gradient(60rem 40rem at 85% -10%, rgba(224, 165, 145, 0.28), transparent 60%),
+    radial-gradient(50rem 30rem at -10% 10%, rgba(246, 228, 221, 0.9), transparent 60%);
 }
 
 @keyframes scan {
-  0% { top: -4rem; }
+  0% { top: -10%; }
   100% { top: 100%; }
 }
 .scan-line {
-  animation: scan 2s ease-in-out infinite alternate;
+  animation: scan 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+.float-delay {
+  animation: float 6s ease-in-out 2s infinite;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+.fade-up {
+  animation: fade-up 0.6s ease both;
 }

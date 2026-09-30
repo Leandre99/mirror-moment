@@ -51,7 +51,7 @@ export function CoachChat({ scan, history }: { scan: SkinScan; history: SkinScan
       {msgs.length === 0 && (
         <div className="mt-2 flex flex-wrap gap-2">
           {SUGGESTIONS.map((s) => (
-            <button key={s} onClick={() => ask(s)} className="rounded-full bg-rose-50 px-3 py-1 text-xs text-rose-700 hover:bg-rose-100">
+            <button key={s} onClick={() => ask(s)} className="rounded-full bg-clay-50 px-3 py-1 text-xs text-clay-700 hover:bg-clay-100">
               {s}
             </button>
           ))}
@@ -64,7 +64,7 @@ export function CoachChat({ scan, history }: { scan: SkinScan; history: SkinScan
           ask();
         }}
       >
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ask anything about your skin..." className="flex-1 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm outline-none focus:border-rose-300" />
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ask anything about your skin..." className="flex-1 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm outline-none focus:border-clay-300" />
         <Button type="submit" disabled={loading || !q.trim()}>
           Send
         </Button>
