@@ -32,6 +32,22 @@ export async function prepareImage(src: string): Promise<Prepared> {
   return { blob, dataUrl: main.dataUrl, width: main.w, height: main.h, thumb };
 }
 
+/** Fallback when YouCam tone analysis is unavailable: average the cheek areas of a centered selfie. */
+export async function estimateSkinHex(src: string): Promise<string> {
+  const img = await loadImage(src);
+  const { canvas, w, h } = draw(img, 400, 0.9);
+  const ctx = canvas.getContext("2d")!;
+  let r = 0, g = 0, b = 0, n = 0;
+  for (const [x0, x1] of [[0.3, 0.4], [0.6, 0.7]]) {
+    const d = ctx.getImageData(Math.round(w * x0), Math.round(h * 0.5), Math.max(1, Math.round(w * (x1 - x0))), Math.max(1, Math.round(h * 0.1))).data;
+    for (let i = 0; i < d.length; i += 4) {
+      r += d[i]; g += d[i + 1]; b += d[i + 2]; n++;
+    }
+  }
+  const hex = (v: number) => Math.round(v / n).toString(16).padStart(2, "0");
+  return `#${hex(r)}${hex(g)}${hex(b)}`;
+}
+
 async function json<T>(res: Response): Promise<T> {
   const j = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(friendlyError(j.code, j.error || `Request failed (${res.status})`));
@@ -46,7 +62,7 @@ export function friendlyError(code?: string, fallback = "Something went wrong") 
     error_face_not_forward_facing: "Look straight into the camera.",
     error_below_min_image_size: "That image is too small. Use a sharper photo.",
     InvalidApiKey: "The YouCam API key is missing or invalid.",
-    CreditInsufficiency: "The YouCam account is out of units.",
+    CreditInsufficiency: "The YouCam account is out of credits. Top up in the YouCam API console to continue.",
   };
   return (code && map[code]) || fallback;
 }

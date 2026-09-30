@@ -5,7 +5,7 @@ import { buildMakeupEffects, coverageFromScan, matchFoundation, suggestLips } fr
 import { runTask } from "@/lib/client";
 import { Button, Card, Pill, Spinner } from "./ui";
 
-export type ToneResult = { skin_color: string; lip_color?: string; eye_color_name?: string; hair_color_name?: string };
+export type ToneResult = { estimated?: boolean; skin_color: string; lip_color?: string; eye_color_name?: string; hair_color_name?: string };
 
 export function ShadeStudio({ scan, image, fileId, tone, toneError }: { scan: SkinScan; image: string; fileId: string; tone: ToneResult | null; toneError: string | null }) {
   const match = useMemo(() => (tone ? matchFoundation(tone.skin_color) : null), [tone]);
@@ -79,6 +79,7 @@ export function ShadeStudio({ scan, image, fileId, tone, toneError }: { scan: Sk
             <span className="h-10 w-10 rounded-full border border-white shadow" style={{ background: tone.skin_color }} />
             <div>
               <div className="text-sm font-semibold text-stone-900">Your skin tone {tone.skin_color}</div>
+              {tone.estimated && <div className="text-xs text-amber-700">Estimated from your photo{toneError ? ` (YouCam tone analysis unavailable: ${toneError})` : ""}</div>}
               <div className="text-xs text-stone-500">
                 {match?.undertone} undertone{tone.eye_color_name ? ` · ${tone.eye_color_name} eyes` : ""}
                 {tone.hair_color_name ? ` · ${tone.hair_color_name} hair` : ""}

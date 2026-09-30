@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import type { Plan } from "@/lib/agent";
 import { MOMENTS, type Moment, type SkinScan } from "@/lib/concerns";
-import { agent, clearHistory, loadHistory, prepareImage, runTask, saveScan, uploadImage, type Prepared } from "@/lib/client";
+import { agent, clearHistory, estimateSkinHex, loadHistory, prepareImage, runTask, saveScan, uploadImage, type Prepared } from "@/lib/client";
 import { MomentPicker } from "@/components/MomentPicker";
 import { Capture } from "@/components/Capture";
 import { SkinResults } from "@/components/SkinResults";
@@ -60,7 +60,12 @@ export default function Home() {
       const quality = Math.min(p.width, p.height) >= 1080 ? "HD" : "SD";
       runTask<{ color: ToneResult }>("skin-tone-analysis", { fileId: up.fileId })
         .then((r) => setTone(r.color))
-        .catch((e) => setToneError((e as Error).message));
+        .catch(async (e) => {
+          setToneError((e as Error).message);
+          try {
+            setTone({ skin_color: await estimateSkinHex(p.dataUrl), estimated: true });
+          } catch {}
+        });
       const r = await runTask<{ skin: Omit<SkinScan, "id" | "createdAt" | "moment" | "mode" | "quality" | "thumb"> }>("skin-analysis", { fileId: up.fileId, quality }, (n) => n === 1 && setStep(2));
       setStep(3);
       const s: SkinScan = { ...r.skin, id: crypto.randomUUID(), createdAt: new Date().toISOString(), moment, mode: up.mode, quality, thumb: p.thumb };
