@@ -342,9 +342,14 @@ export default function Home() {
         <main className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
           <div className="fade-up relative overflow-hidden rounded-[2rem] bg-ink p-6 text-white shadow-lift sm:p-8">
             <div className="absolute -right-16 -top-24 h-72 w-72 rounded-full bg-clay-500/30 blur-3xl" />
-            <div className="relative flex flex-wrap items-center gap-6">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img.thumb} alt="" className="h-20 w-20 rounded-2xl border-2 border-white/20 object-cover" />
+            <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
+              <div className="flex items-center justify-between sm:contents">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={img.thumb} alt="" className="h-16 w-16 rounded-2xl border-2 border-white/20 object-cover sm:h-20 sm:w-20" />
+                <div className="rounded-full bg-white p-1 sm:hidden">
+                  <ScoreRing value={scan.overall} size={72} label="score" />
+                </div>
+              </div>
               <div className="flex-1">
                 <div className="text-xs font-semibold uppercase tracking-[0.2em] text-clay-200">{MOMENTS[moment].title}</div>
                 <h1 className="mt-1 text-3xl font-medium sm:text-4xl">{plan.headline}</h1>
@@ -355,7 +360,7 @@ export default function Home() {
                   {scan.mode === "mock" && <span className="rounded-full bg-amber-400/20 px-3 py-1 text-amber-200">Demo data</span>}
                 </div>
               </div>
-              <div className="rounded-full bg-white p-1.5">
+              <div className="hidden rounded-full bg-white p-1.5 sm:block">
                 <ScoreRing value={scan.overall} size={96} label="score" />
               </div>
             </div>

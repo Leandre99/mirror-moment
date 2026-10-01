@@ -21,15 +21,36 @@ People don't wonder about their skin in the abstract. They wonder right after a 
 
 All YouCam calls go through Next.js API routes (`src/app/api`), so your API key never reaches the browser.
 
-## Run it
+## Tech stack
 
-```bash
-npm install
-cp .env.example .env.local   # add YOUCAM_API_KEY (and optionally OPENAI_API_KEY)
-npm run dev                  # http://localhost:3000
-```
+- **Language:** TypeScript
+- **Framework:** Next.js 14 (App Router, React 18), with API routes as the server-side proxy to YouCam
+- **Styling:** Tailwind CSS, responsive from phone (360px) to desktop
+- **No database:** scan history is stored in the browser (`localStorage`)
 
-If `YOUCAM_API_KEY` is empty, the app runs in **demo mode** with deterministic mock results, so you can try the whole flow without spending credits. Set `YOUCAM_MOCK=1` to force demo mode.
+## Run it locally
+
+**Requirements:** Node.js 18.17+ (Node 20 LTS recommended) and npm.
+
+1. Clone and install:
+   ```bash
+   git clone https://github.com/Leandre99/mirror-moment.git
+   cd mirror-moment
+   npm install
+   ```
+2. Create your env file:
+   ```bash
+   cp .env.example .env.local
+   ```
+3. Open `.env.local` and set `YOUCAM_API_KEY` to your **API Key** from the [YouCam API console](https://yce.makeupar.com/api-console/en/api-keys/). Use the "API Key" value, not the "Secret Key". Leave it empty to use demo mode.
+4. Start the app:
+   ```bash
+   npm run dev        # development, http://localhost:3000
+   # or
+   npm run build && npm start   # production
+   ```
+
+If `YOUCAM_API_KEY` is empty, the app runs in **demo mode** with deterministic mock results, so you can try the whole flow without spending credits. Set `YOUCAM_MOCK=1` to force demo mode. Each live scan uses YouCam credits (units), so check your balance in the console.
 
 | Env var | Purpose |
 | --- | --- |
@@ -37,6 +58,12 @@ If `YOUCAM_API_KEY` is empty, the app runs in **demo mode** with deterministic m
 | `YOUCAM_MOCK` | `1` = force demo mode |
 | `OPENAI_API_KEY` | Optional. Turns on the LLM tool-calling coach |
 | `OPENAI_BASE_URL`, `OPENAI_MODEL` | Optional. Any OpenAI-compatible endpoint (default `gpt-4o-mini`) |
+
+### Tips
+
+- **Camera:** browsers only allow the camera on `https://` or `localhost`. On another device over plain HTTP, use "Upload photo" instead.
+- **HD analysis** needs a photo with a short side of at least 1080px. Smaller photos automatically use SD analysis.
+- **Deploying (e.g. Vercel):** import the repo, add `YOUCAM_API_KEY` (and optionally `OPENAI_API_KEY`) as environment variables, and deploy. No other setup is needed.
 
 ## Code map
 
