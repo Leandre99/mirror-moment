@@ -75,3 +75,7 @@ If `YOUCAM_API_KEY` is empty, the app runs in **demo mode** with deterministic m
 - `src/lib/catalog.ts`: demo product catalog and ingredient knowledge base
 
 The product catalog is fictional demo data. The app gives cosmetic guidance, not medical advice.
+
+## License
+
+[MIT](LICENSE) © 2026 Léandre ELISHA
