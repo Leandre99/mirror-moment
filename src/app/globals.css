@@ -43,3 +43,42 @@ h2 {
 .fade-up {
   animation: fade-up 0.6s ease both;
 }
+
+/* Accessibility */
+:focus-visible {
+  outline: 3px solid #1c1917;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px #ffffff;
+}
+main:focus {
+  outline: none;
+  box-shadow: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+html.a11y-large {
+  font-size: 118%;
+}
+html.a11y-contrast .text-stone-300,
+html.a11y-contrast .text-stone-400,
+html.a11y-contrast .text-stone-500,
+html.a11y-contrast .text-stone-600,
+html.a11y-contrast .text-stone-700 {
+  color: #1c1917 !important;
+}
+html.a11y-contrast .text-clay-600,
+html.a11y-contrast .text-clay-700 {
+  color: #7a2e1e !important;
+}
+html.a11y-contrast [class*="border-stone-"] {
+  border-color: #57534e !important;
+}
+html.a11y-contrast .text-clay-200 {
+  color: #ffffff !important;
+}

@@ -17,7 +17,7 @@ export function ProgressView({ history, focus, onClear }: { history: SkinScan[];
         <div className="flex items-center justify-between">
           <h3 className="font-semibold text-stone-900">Your skin over time</h3>
           {history.length > 0 && (
-            <button onClick={onClear} className="text-xs text-stone-400 hover:text-clay-600">
+            <button onClick={onClear} className="text-xs text-stone-600 hover:text-clay-600">
               Clear history
             </button>
           )}

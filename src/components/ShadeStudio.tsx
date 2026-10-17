@@ -107,8 +107,7 @@ export function ShadeStudio({ scan, image, fileId, tone, toneError }: { scan: Sk
               <div className="text-sm font-semibold text-stone-900">Your skin tone {tone.skin_color}</div>
               {tone.estimated && <div className="text-xs text-amber-700">Estimated from your photo{toneError ? ` (YouCam tone analysis unavailable: ${toneError})` : ""}</div>}
               <div className="text-xs text-stone-500">
-                {match?.undertone} undertone{tone.eye_color_name ? ` · ${tone.eye_color_name} eyes` : ""}
-                {tone.hair_color_name ? ` · ${tone.hair_color_name} hair` : ""}
+                {match?.undertone} undertone
               </div>
             </div>
           </div>

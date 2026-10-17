@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { Plan, ProductCheck } from "@/lib/agent";
 import type { SkinScan } from "@/lib/concerns";
 import { agent } from "@/lib/client";
+import { ListenInline } from "./Listen";
 import { Button, Card, Pill, Spinner } from "./ui";
 
 const EXAMPLES = [
@@ -56,7 +57,8 @@ export function ShopCheck({ scan, plan }: { scan: SkinScan; plan: Plan }) {
               <Pill tone={tone}>{result.verdict.toUpperCase()}</Pill>
               <span className="font-semibold text-stone-900">{result.title}</span>
             </div>
-            <p className="mt-2 text-sm text-stone-600">{result.summary}</p>
+            <p className="mt-2 text-sm text-stone-600" aria-live="polite">{result.summary}</p>
+            <ListenInline text={`${result.title}. ${result.summary}`} label="Listen to this verdict" />
             {result.helps.length > 0 && (
               <div className="mt-3 text-xs text-emerald-700">
                 {result.helps.map((h) => (
@@ -85,7 +87,7 @@ export function ShopCheck({ scan, plan }: { scan: SkinScan; plan: Plan }) {
         <ul className="mt-3 divide-y divide-stone-100">
           {plan.shortlist.map((s, i) => (
             <li key={s.product.id} className="flex items-start gap-3 py-3">
-              <span className="mt-0.5 text-sm font-semibold text-stone-400">#{i + 1}</span>
+              <span className="mt-0.5 text-sm font-semibold text-stone-600">#{i + 1}</span>
               <div className="flex-1">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-sm font-medium text-stone-900">

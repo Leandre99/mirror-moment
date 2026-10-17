@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { buildPlan, checkProduct, compareScans, searchCatalog } from "@/lib/agent";
 import { CONCERNS, type ConcernKey, type SkinScan } from "@/lib/concerns";
-import { matchIngredients } from "@/lib/catalog";
+import { INGREDIENTS, matchIngredients } from "@/lib/catalog";
 import { coachNote, llmEnabled, runCoachAgent } from "@/lib/llm";
 
 export const runtime = "nodejs";
@@ -23,9 +23,21 @@ function rulesChat(question: string, scan: SkinScan, history: SkinScan[]) {
   if (ingredients.length && !q.includes(",")) {
     trace.push("get_scan", "check_product");
     const r = checkProduct(question, scan);
+    const ing = ingredients[0];
+    const info = INGREDIENTS[ing];
+    const uses = (info?.helps ?? []).map((k) => CONCERNS[k].label.toLowerCase()).join(", ");
+    const intro = uses ? `${ing.charAt(0).toUpperCase() + ing.slice(1)} is mainly used for ${uses}. ` : "";
+    if (info?.active === "retinoid") {
+      const why = r.cautions.length ? `Your scan says to go slow: ${r.cautions.map((c) => c.why).join("; ")}. ` : "Nothing in your scan rules it out. ";
+      const lead = r.verdict === "skip" ? "Better to wait" : "You can try it, slowly";
+      return {
+        answer: `${lead}. ${intro}${why}If you start: use it at night, 2 nights a week, a pea-size amount over moisturizer, wear SPF every morning, and stop if your skin stings or peels. Avoid retinoids if you are pregnant or planning to be, and ask a doctor if you are unsure.`,
+        trace,
+      };
+    }
     const lead = r.verdict === "skip" ? "Not right now" : r.cautions.length ? "Carefully" : "Yes";
     const tail = r.verdict === "skip" ? " Rescan in 1 to 2 weeks and ask me again." : r.cautions.length ? " If you try it, use it 2 nights a week over moisturizer and stop if you sting." : " Start slowly and patch test first.";
-    return { answer: `${lead}. ${r.summary}${tail}`, trace };
+    return { answer: `${lead}. ${intro}${r.summary}${tail}`, trace };
   }
   const concern = q.includes(",") ? undefined : (Object.keys(CONCERNS) as ConcernKey[]).find((k) => q.includes(k.replace("_", " ")) || q.includes(CONCERNS[k].label.toLowerCase()) || q.includes(CONCERNS[k].short.toLowerCase()));
   if (concern) {

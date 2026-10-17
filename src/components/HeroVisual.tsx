@@ -46,7 +46,7 @@ export function HeroVisual() {
       <div className="float absolute -left-6 top-24 flex items-center gap-3 rounded-2xl border border-white/70 bg-white/90 p-3 pr-5 shadow-lift backdrop-blur sm:-left-10">
         <ScoreRing value={91} size={56} stroke={5} />
         <div>
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-stone-400">Skin score</div>
+          <div className="text-[10px] font-semibold uppercase tracking-widest text-stone-600">Skin score</div>
           <div className="text-sm font-semibold text-ink">Skin age 28</div>
         </div>
       </div>
@@ -70,7 +70,7 @@ export function HeroVisual() {
       </div>
 
       <div className="float absolute -right-2 bottom-24 rounded-2xl border border-white/70 bg-white/90 p-3 shadow-lift backdrop-blur sm:-right-8">
-        <div className="text-[10px] font-semibold uppercase tracking-widest text-stone-400">Shade match</div>
+        <div className="text-[10px] font-semibold uppercase tracking-widest text-stone-600">Shade match</div>
         <div className="mt-1.5 flex items-center gap-2">
           <span className="h-6 w-6 rounded-full border-2 border-white shadow" style={{ background: "#E2BD9A" }} />
           <span className="text-sm font-semibold text-ink">220 Light Sand</span>

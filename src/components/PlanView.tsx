@@ -19,7 +19,7 @@ function Routine({ title, steps, icon }: { title: string; steps: RoutineStep[]; 
             <div>
               <div className="text-xs font-medium uppercase tracking-wide text-clay-600">{STEP_LABEL[s.step]}</div>
               <div className="text-sm font-medium text-stone-900">
-                {s.product.brand} {s.product.name} <span className="font-normal text-stone-400">${s.product.price}</span>
+                {s.product.brand} {s.product.name} <span className="font-normal text-stone-600">${s.product.price}</span>
               </div>
               <div className="text-xs text-stone-500">{s.note ?? s.product.blurb}</div>
             </div>

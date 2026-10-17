@@ -12,6 +12,9 @@ import { ShopCheck } from "@/components/ShopCheck";
 import { CoachChat } from "@/components/CoachChat";
 import { ShadeStudio, type ToneResult } from "@/components/ShadeStudio";
 import { ProgressView } from "@/components/ProgressView";
+import { A11yControls } from "@/components/A11yControls";
+import { ListenButton } from "@/components/Listen";
+import { resultsToSpeech } from "@/lib/speech";
 import { HeroVisual } from "@/components/HeroVisual";
 import { ArrowIcon, BagIcon, CameraIcon, ChartIcon, ChatIcon, CheckIcon, MirrorIcon, PaletteIcon, ShieldIcon, SparkIcon } from "@/components/icons";
 import { Button, Card, Pill, ScoreRing, SectionTitle, Spinner } from "@/components/ui";
@@ -66,6 +69,7 @@ export default function Home() {
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
+    if (stage !== "moment") document.getElementById("main")?.focus({ preventScroll: true });
   }, [stage]);
 
   async function analyze(src: string) {
@@ -117,6 +121,9 @@ export default function Home() {
 
   return (
     <div className="bg-grain min-h-screen">
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:text-white">
+        Skip to main content
+      </a>
       <header className="sticky top-0 z-30 border-b border-stone-200/60 bg-cream/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
           <button onClick={restart} className="flex items-center gap-2.5">
@@ -133,11 +140,12 @@ export default function Home() {
             </nav>
           )}
           <div className="flex items-center gap-2">
+            <A11yControls />
             {status && (
               <span className="hidden items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-1 text-xs font-medium text-stone-600 sm:inline-flex">
                 <span className={`h-1.5 w-1.5 rounded-full ${status.youcam === "live" ? "bg-emerald-500" : "bg-amber-500"}`} />
                 YouCam {status.youcam === "live" ? "live" : "demo"}
-                <span className="text-stone-300">|</span>
+                <span aria-hidden="true" className="text-stone-300">|</span>
                 {status.llm ? "LLM agent" : "Rules agent"}
               </span>
             )}
@@ -155,7 +163,7 @@ export default function Home() {
       </header>
 
       {stage === "moment" && (
-        <main>
+        <main id="main" tabIndex={-1}>
           <section className="mx-auto grid max-w-6xl items-center gap-16 px-5 pb-20 pt-14 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:pt-20">
             <div className="fade-up">
               <span className="inline-flex items-center gap-2 rounded-full border border-clay-200 bg-white/70 px-3 py-1 text-xs font-medium text-clay-700">
@@ -213,7 +221,7 @@ export default function Home() {
                 { icon: SparkIcon, t: "Get your next move", d: "A focused routine, products ranked for you, and shades you can try on." },
               ].map((s, i) => (
                 <Card key={s.t} className="relative !p-7">
-                  <span className="absolute right-6 top-5 font-display text-5xl font-medium text-stone-100">0{i + 1}</span>
+                  <span aria-hidden="true" data-n={`0${i + 1}`} className="absolute right-6 top-5 font-display text-5xl font-medium text-stone-100 after:content-[attr(data-n)]" />
                   <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-clay-50 text-clay-600">
                     <s.icon className="h-5 w-5" />
                   </span>
@@ -281,7 +289,7 @@ export default function Home() {
       )}
 
       {stage === "capture" && (
-        <main className="mx-auto grid max-w-5xl items-start gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:py-16">
+        <main id="main" tabIndex={-1} className="mx-auto grid max-w-5xl items-start gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:py-16">
           <div className="fade-up">
             <Capture onImage={analyze} />
           </div>
@@ -312,7 +320,7 @@ export default function Home() {
       )}
 
       {stage === "analyzing" && (
-        <main className="mx-auto flex max-w-lg flex-col items-center px-5 py-16 text-center">
+        <main id="main" tabIndex={-1} className="mx-auto flex max-w-lg flex-col items-center px-5 py-16 text-center">
           <div className="relative w-64 overflow-hidden rounded-[2.5rem] border-4 border-white shadow-lift">
             {img ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -324,11 +332,12 @@ export default function Home() {
             <div className="scan-line absolute inset-x-0 h-20 bg-gradient-to-b from-transparent via-clay-300/60 to-transparent" />
           </div>
           <h1 className="mt-10 text-3xl font-medium text-ink">Reading your skin</h1>
+          <p className="sr-only" role="status" aria-live="polite">{STEPS[Math.min(step, STEPS.length - 1)]}</p>
           <p className="mt-2 text-sm text-stone-500">This usually takes 10 to 20 seconds.</p>
           <Card className="mt-8 w-full !p-5 text-left">
             <ul className="space-y-3">
               {STEPS.map((s, i) => (
-                <li key={s} className={`flex items-center gap-3 text-sm ${i < step ? "text-stone-400" : i === step ? "font-medium text-ink" : "text-stone-300"}`}>
+                <li key={s} className={`flex items-center gap-3 text-sm ${i < step ? "text-stone-600" : i === step ? "font-medium text-ink" : "text-stone-500"}`}>
                   <span className={`flex h-6 w-6 items-center justify-center rounded-full ${i < step ? "bg-emerald-50 text-emerald-600" : i === step ? "bg-clay-50 text-clay-600" : "bg-stone-50"}`}>
                     {i < step ? <CheckIcon className="h-3.5 w-3.5" /> : i === step ? <Spinner /> : null}
                   </span>
@@ -341,7 +350,7 @@ export default function Home() {
       )}
 
       {stage === "results" && scan && plan && img && (
-        <main className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
+        <main id="main" tabIndex={-1} className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
           <div className="fade-up relative overflow-hidden rounded-[2rem] bg-ink p-6 text-white shadow-lift sm:p-8">
             <div className="absolute -right-16 -top-24 h-72 w-72 rounded-full bg-clay-500/30 blur-3xl" />
             <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
@@ -361,6 +370,9 @@ export default function Home() {
                   <span className="rounded-full bg-white/10 px-3 py-1">{scan.quality} analysis</span>
                   {scan.mode === "mock" && <span className="rounded-full bg-amber-400/20 px-3 py-1 text-amber-200">Demo data</span>}
                 </div>
+                <div className="mt-3">
+                  <ListenButton text={resultsToSpeech(scan, plan)} label="Listen to my results" />
+                </div>
               </div>
               <div className="hidden rounded-full bg-white p-1.5 sm:block">
                 <ScoreRing value={scan.overall} size={96} label="score" />
@@ -368,17 +380,42 @@ export default function Home() {
             </div>
           </div>
 
-          <nav className="sticky top-16 z-20 -mx-5 mt-6 overflow-x-auto bg-cream/80 px-5 py-3 backdrop-blur-md sm:mx-0 sm:px-0">
-            <div className="inline-flex gap-1 rounded-full border border-stone-200 bg-white p-1 shadow-soft">
+          <nav aria-label="Results sections" className="sticky top-16 z-20 -mx-5 mt-6 overflow-x-auto bg-cream/80 px-5 py-3 backdrop-blur-md sm:mx-0 sm:px-0">
+            <div
+              role="tablist"
+              aria-label="Results sections"
+              className="inline-flex gap-1 rounded-full border border-stone-200 bg-white p-1 shadow-soft"
+              onKeyDown={(e) => {
+                const i = TABS.findIndex((t) => t.id === tab);
+                const go = (n: number) => {
+                  const t = TABS[(n + TABS.length) % TABS.length];
+                  setTab(t.id);
+                  requestAnimationFrame(() => document.getElementById(`tab-${t.id}`)?.focus());
+                };
+                if (e.key === "ArrowRight") { e.preventDefault(); go(i + 1); }
+                else if (e.key === "ArrowLeft") { e.preventDefault(); go(i - 1); }
+                else if (e.key === "Home") { e.preventDefault(); go(0); }
+                else if (e.key === "End") { e.preventDefault(); go(TABS.length - 1); }
+              }}
+            >
               {TABS.map((t) => (
-                <button key={t.id} onClick={() => setTab(t.id)} className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition ${tab === t.id ? "bg-ink text-white shadow" : "text-stone-600 hover:text-ink"}`}>
+                <button
+                  key={t.id}
+                  id={`tab-${t.id}`}
+                  role="tab"
+                  aria-selected={tab === t.id}
+                  aria-controls="tabpanel"
+                  tabIndex={tab === t.id ? 0 : -1}
+                  onClick={() => setTab(t.id)}
+                  className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition ${tab === t.id ? "bg-ink text-white shadow" : "text-stone-600 hover:text-ink"}`}
+                >
                   {t.label}
                 </button>
               ))}
             </div>
           </nav>
 
-          <div key={tab} className="fade-up mt-4">
+          <div key={tab} id="tabpanel" role="tabpanel" aria-labelledby={`tab-${tab}`} className="fade-up mt-4">
             {tab === "plan" && (
               <div className="grid gap-6 xl:grid-cols-[1fr_380px]">
                 <PlanView plan={plan} />
@@ -401,7 +438,7 @@ export default function Home() {
               />
             )}
           </div>
-          <p className="mt-12 text-center text-xs text-stone-400">Cosmetic guidance, not medical advice. For painful, cystic or long-lasting acne, see a dermatologist.</p>
+          <p className="mt-12 text-center text-xs text-stone-600">Cosmetic guidance, not medical advice. For painful, cystic or long-lasting acne, see a dermatologist.</p>
         </main>
       )}
     </div>

@@ -66,7 +66,7 @@ export function SkinResults({ scan, image, focus }: { scan: SkinScan; image: str
                 </div>
                 <div className="mt-2 flex items-end gap-1">
                   <span className="text-2xl font-semibold text-stone-900">{c.ui}</span>
-                  <span className="mb-1 text-xs text-stone-400">/100</span>
+                  <span className="mb-1 text-xs text-stone-600">/100</span>
                 </div>
                 <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-stone-100">
                   <div className="h-full rounded-full" style={{ width: `${c.ui}%`, background: BAR[band.tone] }} />

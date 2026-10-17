@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { SkinScan } from "@/lib/concerns";
 import { agent } from "@/lib/client";
 import { Button, Card, Spinner } from "./ui";
+import { ListenInline } from "./Listen";
 
 type Msg = { role: "user" | "assistant"; content: string; trace?: string[] };
 
@@ -33,17 +34,18 @@ export function CoachChat({ scan, history }: { scan: SkinScan; history: SkinScan
     <Card>
       <h3 className="font-semibold text-stone-900">Ask your coach</h3>
       <p className="mt-1 text-sm text-stone-500">The agent can look up your scan, check products, search the catalog and compare your progress.</p>
-      <div className="mt-4 max-h-80 space-y-3 overflow-y-auto">
+      <div className="mt-4 max-h-80 space-y-3 overflow-y-auto" role="log" aria-live="polite" aria-label="Conversation with your coach">
         {msgs.map((m, i) => (
           <div key={i} className={m.role === "user" ? "flex justify-end" : ""}>
             <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${m.role === "user" ? "bg-stone-900 text-white" : "bg-stone-100 text-stone-800"}`}>
               {m.content}
-              {m.trace && m.trace.length > 0 && <div className="mt-1.5 text-[10px] uppercase tracking-wide text-stone-400">tools: {m.trace.join(" → ")}</div>}
+              {m.role === "assistant" && <div><ListenInline text={m.content} label="Listen to this answer" /></div>}
+              {m.trace && m.trace.length > 0 && <div className="mt-1.5 text-[10px] uppercase tracking-wide text-stone-600">tools: {m.trace.join(" → ")}</div>}
             </div>
           </div>
         ))}
         {loading && (
-          <div className="text-stone-400">
+          <div className="text-stone-600">
             <Spinner />
           </div>
         )}
