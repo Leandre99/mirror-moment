@@ -61,7 +61,7 @@ export function Capture({ onImage }: { onImage: (src: string) => void }) {
             <div className="relative flex h-[64%] w-[62%] items-center justify-center rounded-[50%] border-2 border-dashed border-clay-200">
               <MirrorIcon className="h-12 w-12 text-clay-300" />
             </div>
-            <p className="mt-4 text-sm text-stone-500">Center your face in the oval</p>
+            <p className="mt-4 text-sm text-stone-500">Center your face in the oval. Close-up selfie, not full-body.</p>
           </div>
         )}
       </div>

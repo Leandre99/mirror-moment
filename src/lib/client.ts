@@ -59,8 +59,9 @@ export function friendlyError(code?: string, fallback = "Something went wrong") 
     error_no_face: "I couldn't find a face. Face the camera straight on in good light.",
     error_face_position_invalid: "Center your face in the frame, and make sure all of it is visible.",
     error_face_position_too_small: "Move closer. Your face should fill most of the frame.",
+    error_src_face_too_small: "Your face is too small in this photo. Take a close-up selfie where your face fills most of the frame (more than 60% of the width), not a full-body shot.",
     error_face_not_forward_facing: "Look straight into the camera.",
-    error_below_min_image_size: "That image is too small. Use a sharper photo.",
+    error_below_min_image_size: "That image is too small. Use a sharper photo, ideally 1080px or more on the short side.",
     InvalidApiKey: "The YouCam API key is missing or invalid.",
     CreditInsufficiency: "The YouCam account is out of credits. Top up in the YouCam API console to continue.",
   };
