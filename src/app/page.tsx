@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import type { Plan } from "@/lib/agent";
 import { MOMENTS, type Moment, type SkinScan } from "@/lib/concerns";
 import { agent, clearHistory, estimateSkinHex, loadHistory, prepareImage, runTask, saveScan, uploadImage, type Prepared } from "@/lib/client";
+import { autoFrame } from "@/lib/face";
 import { MomentPicker } from "@/components/MomentPicker";
 import { Capture } from "@/components/Capture";
 import { SkinResults } from "@/components/SkinResults";
@@ -74,7 +75,8 @@ export default function Home() {
     setTone(null);
     setToneError(null);
     try {
-      const p = await prepareImage(src);
+      const framed = await autoFrame(src);
+      const p = await prepareImage(framed.src);
       setImg(p);
       const up = await uploadImage(p.blob);
       setFileId(up.fileId);
